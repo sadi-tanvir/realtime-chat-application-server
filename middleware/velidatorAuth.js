@@ -2,17 +2,15 @@ const registerValidator = (user) => {
     const error = {}
 
     if (!user.name) {
-        error.name = "Please Enter Your Name"
-    }else if(user.name.length < 3){
-        error.name = "Name Must be at least 3 character"
-    }
-    
-    if (!user.email) {
-        error.email = "Pleaser Enter Your Email"
-    } if (!user.password) {
-        error.password = "Pleaser Enter Your Password"
-    } if (user.password.length < 4) {
-        error.password = "Password Must be at least 4 character"
+        error.message = "Please Enter Your Name"
+    } else if (user.name.length < 3) {
+        error.message = "Name Must be at least 3 character"
+    } else if (!user.email) {
+        error.message = "Pleaser Enter Your Email"
+    } else if (!user.password) {
+        error.message = "Pleaser Enter Your Password"
+    } else if (user.password.length < 4) {
+        error.message = "Password Must be at least 4 character"
     }
 
 

@@ -26,6 +26,7 @@ const registerUser = async (req, res) => {
         if (!user) return res.status(400).json({ message: 'failed to create The user.' })
 
         res.status(201).json({
+            message: "The User Has Registered Successfully",
             user,
             token: generateToken(user.email)
         })
@@ -35,6 +36,32 @@ const registerUser = async (req, res) => {
 }
 
 
+// login user
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // find user
+        const user = await User.findOne({ email })
+        if (!user) return res.status(409).json({ message: 'User Not Exist.' })
+
+        bcrypt.compare(password, user.password, (error, decoded) => {
+            if (!decoded) return res.status(401).json({ message: 'Password doesn\'t match.' })
+
+            res.status(200).json({
+                message: "User Login successFully.",
+                user,
+                token: generateToken(user.email)
+            })
+        })
+
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser
 }
