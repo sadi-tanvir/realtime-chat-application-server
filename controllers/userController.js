@@ -61,7 +61,26 @@ const loginUser = async (req, res) => {
 }
 
 
+// login user
+const getFriends = async (req, res) => {
+    try {
+        const query = req.query.search ? {
+            $or: [
+                { name: { $regex: req.query.search, $options: 'i' } },
+                { email: { $regex: req.query.search, $options: 'i' } }
+            ]
+        } : {};
+        const user = await User.find(query).select("-password")
+        res.json({ user })
+
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    getFriends
 }
