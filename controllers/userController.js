@@ -70,8 +70,9 @@ const getFriends = async (req, res) => {
                 { email: { $regex: req.query.search, $options: 'i' } }
             ]
         } : {};
-        const user = await User.find(query).select("-password")
-        res.json({ user })
+        const users = await User.find(query).select("-password")
+        const friends = users.filter(user => user.email !== req.user.email)
+        res.json({ user:friends })
 
     } catch (error) {
         res.status(500).json(error)
