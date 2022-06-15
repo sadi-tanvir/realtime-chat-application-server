@@ -30,7 +30,7 @@ const getMessages = async (req, res) => {
 
     try {
         let getMessages = await Message.find({})
-        getMessages = getMessages.filter(m => (m.senderId == userId && m.receiverId == friendId) || (m.receiverId == userId && m.senderId == friendId ))
+        getMessages = getMessages.filter(m => (m.senderId == userId && m.receiverId == friendId) || (m.receiverId == userId && m.senderId == friendId))
 
         res.status(200).json({
             success: true,
@@ -41,9 +41,34 @@ const getMessages = async (req, res) => {
     }
 }
 
+
+const sendImageMessage = async (req, res) => {
+    const { senderName, receiverId } = req.body;
+
+    const sendMessage = new Message({
+        senderId: req.user._id,
+        senderName,
+        receiverId,
+        message: {
+            text: "",
+            image: req.file.filename
+        },
+    })
+
+
+    const sentMessage = await sendMessage.save()
+
+    res.status(201).json({
+        success: true,
+        message: sentMessage
+    })
+
+}
+
 module.exports = {
     sendMessage,
-    getMessages
+    getMessages,
+    sendImageMessage
 }
 
 
