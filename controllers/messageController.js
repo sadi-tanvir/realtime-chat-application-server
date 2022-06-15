@@ -23,6 +23,37 @@ const sendMessage = async (req, res) => {
     })
 }
 
-module.exports = {
-    sendMessage
+
+const getMessages = async (req, res) => {
+    const userId = req.user._id;
+    const friendId = req.params.id
+
+    try {
+        let getMessages = await Message.find({})
+        getMessages = getMessages.filter(m => (m.senderId == userId && m.receiverId == friendId) || (m.receiverId == userId && m.senderId == friendId ))
+
+        res.status(200).json({
+            success: true,
+            messages: getMessages
+        })
+    } catch (error) {
+        res.send(error)
+    }
 }
+
+module.exports = {
+    sendMessage,
+    getMessages
+}
+
+
+
+
+
+    // const { senderId, receiverId } = req.query;
+
+    // const messages = await Message.find({
+    //     $or: [
+
+    //     ]
+    // })
