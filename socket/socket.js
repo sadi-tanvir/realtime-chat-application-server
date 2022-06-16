@@ -5,13 +5,21 @@ const io = require('socket.io')(8000, {
     }
 });
 
+let users = []
 
+const addUser = (userId, socketId, userInfo) => {
+   const isUserExist = users.some(user => user.userId === userId)
+   console.log(isUserExist);
+   if(!isUserExist){
+    users.push({userId, socketId, userInfo})
+   }
+}
 
 io.on('connection', (socket) => {
     console.log('socket is running on port 8000');
 
     socket.on('addUser', (userId, userInfo) => {
-        console.log(userId);
-        console.log(userInfo);
+        addUser(userId, socket.id, userInfo)
+        io.emit('getUsers', users)
     })
 })
