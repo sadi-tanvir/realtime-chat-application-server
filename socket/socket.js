@@ -5,11 +5,13 @@ const io = require('socket.io')(8000, {
     }
 });
 
-let users = []
+var users = []
+console.log(users);
 
-const addUser = (userId, socketId, userInfo) => {
+function addUser(userId, socketId, userInfo){
    const isUserExist = users.some(user => user.userId === userId)
    if(!isUserExist){
+       console.log(`this is active`);
     users.push({userId, socketId, userInfo})
    }
 }
@@ -19,7 +21,9 @@ const removeUser = (socketId) => {
 }
 
 const findUser = (id) => {
-    return users.find(user  => user.userId === id)
+    const ss = users.find(user  => user.userId === id)
+    console.log(`findUser`,ss)
+    return ss
     
 }
 
@@ -39,12 +43,17 @@ io.on('connection', (socket) => {
 
 
     socket.on('sendMessage', (messageInfo) => {
-        console.log(messageInfo);
+        // console.log(messageInfo);
         const isUserActive = findUser(messageInfo.receiverId)
-        if(isUserActive !== undefined){
-            io.to(isUserActive.socketId).emit('receiveMessage', messageInfo)
-        }
+        console.log(`isUserActive: `, isUserActive);
         io.emit('receiveMessage', messageInfo)
+    })
+
+
+    socket.on('typingMessage', (data) => {
+        // console.log(data);
+        const isUserActive = findUser(data.receiverId)
+        socket.broadcast.emit('typingMessageStatus', data)
     })
 
     
