@@ -3,6 +3,8 @@ const User = require('../model/userModel')
 const generateToken = require('../config/generateToken')
 const bcrypt = require('bcryptjs');
 
+
+
 // register user
 const registerUser = async (req, res) => {
     try {
@@ -61,27 +63,9 @@ const loginUser = async (req, res) => {
 }
 
 
-// login user
-const getFriends = async (req, res) => {
-    try {
-        const query = req.query.search ? {
-            $or: [
-                { name: { $regex: req.query.search, $options: 'i' } },
-                { email: { $regex: req.query.search, $options: 'i' } }
-            ]
-        } : {};
-        const users = await User.find(query).select("-password")
-        const friends = users.filter(user => user.email !== req.user.email)
-        res.json({ user:friends })
-
-    } catch (error) {
-        res.status(500).json(error)
-    }
-}
 
 
 module.exports = {
     registerUser,
     loginUser,
-    getFriends
 }

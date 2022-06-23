@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { registerUser,loginUser, getFriends } = require('../controllers/userController')
+const { registerUser,loginUser } = require('../controllers/userController')
 const auth = require('../middleware/auth')
 
 
@@ -11,8 +11,6 @@ router.post('/register', registerUser)
 router.post('/login', loginUser)
 
 
-// getUsers
-router.get('/get-friends', auth, getFriends)
 
 
 
