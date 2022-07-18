@@ -15,11 +15,15 @@ const messageSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    message:{
-        text: {type: String, default: ''},
-        image: {type: String, default: ''}   
+    message: {
+        text: { type: String, default: '' },
+        image: { type: String, default: '' }
+    },
+    status: {
+        type: String,
+        default: 'unseen'
     }
-},{timestamps: true})
+}, { timestamps: true })
 
 
 const Message = new mongoose.model('Message', messageSchema)

@@ -63,9 +63,55 @@ const loginUser = async (req, res) => {
 }
 
 
+// update user information
+const UpdateUserInfo = async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate({ email: req.user.email }, { $set: req.body }, { new: true }).select("-password")
+        if (!user) return res.status(409).json({ message: 'Failed to update user' })
+
+        res.status(200).json({
+            message: "User Information Updated Successfully",
+            user
+        })
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+// update user information
+const changePassword = async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+
+        // find user
+        const user = await User.findOne({ email: req.user.email })
+        if (!user) return res.status(409).json({ message: 'User Not Exist.' })
+
+        bcrypt.compare(oldPassword, user.password, async (error, decoded) => {
+            if (!decoded) return res.status(401).json({ message: 'Password doesn\'t match.' })
+            // hash password
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(newPassword, salt);
+
+            const changedPassword = await User.findOneAndUpdate(
+                { email: req.user.email },
+                { $set: { password: hash } },
+                { new: true })
+
+            res.status(200).json({
+                message: "Password Updated successFully."
+            })
+        })
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
 
 
 module.exports = {
     registerUser,
     loginUser,
+    UpdateUserInfo,
+    changePassword
 }
