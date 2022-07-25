@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000
 const server = http.createServer(app)
 const io = require("socket.io")(server, {
     cors: {
-        origin: port,
+        origin: process.env.ORIGIN_URL,
         methods: ["GET", "POST"],
         allowedHeaders: ["my-custom-header"],
         credentials: true
